@@ -1,6 +1,7 @@
 import requests
 import json
 import logging
+import re
 import pandas as pd
 from ollama_manager.ollama_config import *
 
@@ -57,6 +58,7 @@ def ollama_create_custom_model(model_base, model_name, model_file_content):
     - bool: True se a operação foi bem-sucedida, False se der erro ou status diferente de success.
     """
     try:
+        model_file_content = re.sub(r'\r?\n', ' ', model_file_content)
         model_file = f"FROM {model_base}\nSYSTEM {model_file_content}"
         response = requests.post(URL_OLLAMA_CREATE,
                                  json={'name': model_name,
